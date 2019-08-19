@@ -1,8 +1,9 @@
 import React from "react";
 
 const Home = (props) => {
+    console.log(process.env.PORT)
     return (
-        <div>dasdadadas</div>
+        <div>dsa21</div>
     );
 };
 
