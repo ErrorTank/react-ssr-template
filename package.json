@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next -p 4000",
+    "dev": "nodemon server/server.js --watch server --legacyWatch",
     "start": "nodemon ./server/server.js",
     "docker-dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
-    "docker-prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build"
+    "docker-prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build",
+    "build": "next build"
   },
   "repository": {
     "type": "git",
@@ -27,11 +28,18 @@
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "cloudinary": "1.7.0",
+    "@material-ui/core": "^3.3.0",
+    "@material-ui/icons": "^3.0.1",
+    "compression": "^1.7.3",
+    "helmet": "^3.14.0",
     "dotenv": "4.0.0",
     "lodash": "^4.13.1",
     "moment": "2.17.1",
     "next": "^8.1.0",
+    "next-nprogress": "^1.1.0",
+    "validator": "^10.8.0",
     "nprogress": "^0.2.0",
+    "express": "^4.16.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-slick": "^0.18.1",

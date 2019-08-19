@@ -3,7 +3,9 @@ version: '3'
 services:
 
   react:
-    command: npm run dev
+    command: >
+      sh -c "npm run build &&
+             npm run dev"
     ports:
       - "4000:4000"
     env_file:
