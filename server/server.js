@@ -17,6 +17,8 @@ app.prepare().then(() => {
         server.use(compression());
     }
 
+    app.use(require("./routes/index")(app));
+
     /* Body Parser built-in to Express as of version 4.16 */
     server.use(express.json());
     /* Express Validator will validate form data sent to the backend */
