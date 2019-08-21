@@ -1,50 +1,22 @@
-const express = require("express");
+const configExpressServer = require("./config/express");
 const next = require("next");
-const helmet = require("helmet");
-const compression = require("compression");
-
-const app = next({ dev: !process.env.NODE_ENV === "development" });
+const app = next({dev: !process.env.NODE_ENV === "development"});
 const handle = app.getRequestHandler();
+const initDb = require("./config/db");
 
+initDb()
+    .then((db) => {
+        return app.prepare().then(() => db).catch(() => Promise.reject());
+    })
+    .then((db) => {
 
-app.prepare().then(() => {
-    const server = express();
+        const server = configExpressServer({useCors: false, nextHandler: handle});
 
-    if (!process.env.NODE_ENV === "development") {
-        /* Helmet helps secure our app by setting various HTTP headers */
-        server.use(helmet());
-        /* Compression gives us gzip compression */
-        server.use(compression());
-    }
+        server.use(require("./routes/index")(db));
 
-    app.use(require("./routes/index")(app));
-
-    /* Body Parser built-in to Express as of version 4.16 */
-    server.use(express.json());
-    /* Express Validator will validate form data sent to the backend */
-
-    /* give all Next.js's requests to Next.js server */
-    server.get("/_next/*", (req, res) => {
-        handle(req, res);
+        server.use(require("./utils/error-handlers"));
+        server.listen(process.env.PORT, err => {
+            if (err) throw err;
+            console.log(`Server listening on port ${process.env.PORT}`);
+        });
     });
-
-    server.get("/static/*", (req, res) => {
-        handle(req, res);
-    });
-
-
-
-
-    /* default route
-       - allows Next to handle all other routes
-       - includes the numerous `/_next/...` routes which must    be exposedfor the next app to work correctly
-       - includes 404'ing on unknown routes */
-    server.get("*", (req, res) => {
-        handle(req, res);
-    });
-
-    server.listen(process.env.PORT, err => {
-        if (err) throw err;
-        console.log(`Server listening on port ${process.env.PORT}`);
-    });
-});
